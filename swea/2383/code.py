@@ -1,12 +1,14 @@
-from typing import Tuple
+import math
+from collections import defaultdict
+
 T = int(input())
 
 for t in range(T):
     N = int(input())
 
     pos_list = []
-    stairs_number_list = []
-    stairs_list = []
+    stairs_size_list = []
+    stairs_list = [] # len: 2
     
     for i in range(N):
         row = list(map(int, input().split()))
@@ -14,53 +16,88 @@ for t in range(T):
             if cell == 1:
                 pos_list.append((i, j))
             if cell >= 2:
-                stairs_number_list.append(cell)
+                stairs_size_list.append(cell)
                 stairs_list.append((i, j))
     
-    def get_dist(A: Tuple[int, int], B: Tuple[int, int]):
-        return abs(A[0] - B[0]) + abs(A[1] - B[1])
+    next_pos_list = []
+
+    def get_next_pos(pos, stairs_index):
+        x, y = pos
+        gx, gy = stairs_list[stairs_index]
+
+        # x를 우선적으로 계산함
+        if gx < x or gx > x:
+            x = x + int(math.copysign(1, gx - x))
+        elif gy < y or gy > y:
+            y = y + int(math.copysign(1, gy - y))
+        
+        if next_pos_list.count(pos) <= stairs_people_map[stairs_index]:
+            return x, y
+        
+        # 만약 이미 이동하려는 누군가가 있다면
+        # y를 우선적으로 다음 자리를 계산함
+        if (x, y) in next_pos_list:
+            x, y = pos
+            if gy < y or gy > y:
+                y = y + int(math.copysign(1, gy - y))
+
+        return x, y
     
-    def brute_force_stairs(stairs_orders, step):
-        if step == N:
-            stairs_distances = [
-                [],
-                []
-            ]
+    # 계단에서 내려가고 있는 시간
+    stairs_map = defaultdict(int)
+    # 계단에 있는 사람 수
+    stairs_people_map = defaultdict(int)
+    # 이미 계단을 다 내려왔는가?
+    visited = [False] * len(pos_list)
+
+    def calc_next(sorted_pos_stairs_list):
+        # print(sorted_pos_stairs_list, visited)
+        for i, (pos, stairs_index) in enumerate(sorted_pos_stairs_list):
+            if visited[i]: continue
+
+            if pos == stairs_list[stairs_index] and stairs_people_map[stairs_index] < 3:
+                stairs_map[i] += 1
+                stairs_people_map[stairs_index] += 1
+                if stairs_map[i] > stairs_size_list[stairs_index]:
+                    visited[i] = True
+                    stairs_people_map[stairs_index] -= 1
+                continue
+
+            next_pos = get_next_pos(
+                pos, stairs_index)
             
-            for i, stairs_order in enumerate(stairs_orders):
-                stairs_distances[stairs_order].append(
-                    get_dist(stairs_list[stairs_order], pos_list[i])
-                )
+            next_pos_list.append(next_pos)
+            
+            sorted_pos_stairs_list[i] = (next_pos, stairs_index)
+    
+    def compare(pos_stairs):
+        pos, stairs_index = pos_stairs
+        return abs(pos[0] - stairs_list[stairs_index][0]) + abs(pos[1] - stairs_list[stairs_index][1])
+    
+    min_time = math.inf
 
-            stairs_distances[0].sort()
-            stairs_distances[1].sort()
-            print(stairs_distances[0])
-            print(stairs_distances[1])
+    def brute_force_stairs(pos_stairs_list, step):
+        global next_pos_list, min_time, visited, stairs_map, stairs_people_map
+        if step == len(pos_list):
+            stairs_map = defaultdict(int)
+            visited = [False] * len(pos_list)
+            sorted_pos_stairs_list = sorted(pos_stairs_list, key=compare)
 
-            spend_time = 0
-            # 계단에 있는 사람 수
-            first_stairs_people_number = 0
-            second_stairs_people_number = 0
-            t = 0
+            time = 0
 
-            while True:
-                t += 1
+            while not all(visited):
+                next_pos_list = []
+                stairs_people_map = defaultdict(int)
+                calc_next(sorted_pos_stairs_list)
+                time += 1
 
-                first_stairs_distances = stairs_distances[0]
-
-                for i in range(len(first_stairs_distances)):
-                    if (first_stairs_distances[i] - 1 == 0 and
-                        first_stairs_people_number < stairs_number_list[0]):
-                        pass
-                    
-                    first_stairs_distances[i] -= 1
-                    if first_stairs_distances[i] == 0:
-                        first_stairs_people_number += 1
-                
+            min_time = min(min_time, time)
+            # print("min_time", min_time)
             return
         
-        brute_force_stairs(stairs_orders + [0], step + 1)
-        brute_force_stairs(stairs_orders + [1], step + 1)
-        pass
-    brute_force_stairs([0], 1)
-    brute_force_stairs([1], 1)
+        brute_force_stairs(pos_stairs_list + [(pos_list[step], 0)], step + 1)
+        brute_force_stairs(pos_stairs_list + [(pos_list[step], 1)], step + 1)
+
+    brute_force_stairs([(pos_list[0], 0)], 1)
+    brute_force_stairs([(pos_list[0], 1)], 1)
+    print(f"#{t+1}", min_time)
