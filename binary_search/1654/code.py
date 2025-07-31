@@ -8,31 +8,30 @@ K, N = map(int, readline().split())
 
 arr = []
 
-min_v = math.inf
+max_len = -math.inf
 
 for k in range(K):
     v = int(readline())
     arr.append(v)
-    if min_v > v: min_v = v
+    if max_len < v: max_len = v
 
-s = 1
-e = min_v * 2
-max_len = 0
-while s <= e:
-    mid = (s + e) // 2
-    # print('mid:', mid)
-    is_big = False
+s = 0
+e = max_len * 2
+min_n = math.inf
+max_v = 0
 
-    lan_number = 0
-    for num in arr:
-        lan_number += num // mid
-        if lan_number >= N:
-            is_big = True
-            break
-    if is_big:
-        if max_len < mid:
-            max_len = mid
-        s = mid+1
+def get_lan_cable(arr, mid):
+    return sum([(num//mid) for num in arr])
+
+while s < e:
+    # print(s, e)
+    mid = (s+e) // 2
+    lan_cable = get_lan_cable(arr, mid)
+
+    if lan_cable >= N:
+        min_n = min(min_n, lan_cable)
+        max_v = max(max_v, mid)
+        s = mid + 1
     else:
-        e = mid-1
-print(max_len)
+        e = mid
+print(max_v)
