@@ -77,6 +77,13 @@ for t in range(T):
     min_time = math.inf
 
     def brute_force_stairs(pos_stairs_list, step):
+        """
+        완전탐색하는 함수입니다.
+        Args:
+            pos_stairs_list: list[(P좌표, 목적지)]
+            step: pos_stairs_list 길이
+        """
+        
         global next_pos_list, min_time, visited, stairs_map, stairs_people_map
         if step == len(pos_list):
             stairs_map = defaultdict(int)
