@@ -7,5 +7,4 @@
 [DP 9184](./dynamic_programming_1/9184/README.md)
 [DP 9461](./dynamic_programming_1/9461/README.md)
 [DP 24416](./dynamic_programming_1/24416/README.md)
-[SWEA 1206](./swea/1206/README.md)
-[SWEA 1486](./swea/1486/README.md)
+[SWEA 2115](./swea//2115/README.md)
