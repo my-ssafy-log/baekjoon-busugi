@@ -1,4 +1,3 @@
-from typing import List, Dict, Tuple
 # import sys
 
 def readline():
@@ -42,7 +41,7 @@ for t in range(T):
     def do_next():
         global mic_list
         new_mic_list = []
-        new_mic_dict: Dict[Tuple[int, int], List[int]] = {}
+        new_mic_dict: dict[tuple[int, int], list[dict[str, int]]] = {}
         for mic in mic_list:
             pos, num, d = move_mic(**mic)
             new_mic_dict.setdefault(pos, [])
