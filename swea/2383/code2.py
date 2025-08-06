@@ -1,3 +1,5 @@
+# 미완성 코드
+
 T = int(input())
 
 for t in range(T):

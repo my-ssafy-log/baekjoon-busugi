@@ -63,9 +63,7 @@ for t in range(T):
                 cnum = a_waiting_queue[0]
                 a_waiting_queue = a_waiting_queue[1:]
                 a_arr[i] = (cnum, 0)
-        
-        # a_waiting_queue.sort()
-
+                
         # b 창고에 있는 사람들의 보낸 시간을 +1 해줌
         for i in range(1, M+1):
             # 비어있지 않다면
@@ -95,18 +93,8 @@ for t in range(T):
                 cnum = b_waiting_queue[0]
                 b_waiting_queue = b_waiting_queue[1:]
                 b_arr[i] = (cnum, 0)
-        # b_waiting_queue.sort()
-
-        # print("time:", time)
-        # print("a_arr:", a_arr)
-        # print("b_arr:", b_arr)
-        # print("visited", visited)
-        # print()
         time += 1
 
-        # breakpoint()
-    # print("visited")
-    # print(visited)
     if total == 0:
         print(f"#{t+1} -1")
     else:

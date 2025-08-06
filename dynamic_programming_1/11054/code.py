@@ -34,8 +34,4 @@ for i, cur in enumerate(reversed_arr):
 d = d[1:]
 rereversed_d = list(reversed(reversed_d[1:]))
 
-# print(arr[1:])
-# print(d)
-# print(arr[1:])
-# print(rereversed_d)
 print(max([d[i] + rereversed_d[i] for i in range(len(d))]) - 1)
