@@ -1,6 +1,6 @@
 import sys
 
-sys.stdin = open('sample_input.txt', 'r')
+sys.stdin = open('./sample_input.txt', 'r')
 
 T = int(input())
 
@@ -25,46 +25,46 @@ for t in range(T):
     a_pos = (1, 1)
     b_pos = (10, 10)
 
-    def get_able_bcs(pos):
+    def get_able_bc_pos_list(pos):
         x, y = pos
 
-        possible_bcs = []
+        possible_bc_list = []
         for bc in bc_list:
             bcx, bcy = bc['pos']
 
             if abs(bcx - x) + abs(bcy - y) <= bc['c']:
-                possible_bcs.append((bcx, bcy))
+                possible_bc_list.append((bcx, bcy))
             # 겹칠 것을 고려해 2개 이상이면 break
-            if len(possible_bcs) >= 2:
+            if len(possible_bc_list) >= 2:
                 break
-        return possible_bcs
+        return possible_bc_list
 
     def add_power():
-        a_able_bcs = get_able_bcs(a_pos)
-        a_bcs_len = len(a_able_bcs)
-        b_able_bcs = get_able_bcs(b_pos)
-        b_bcs_len = len(b_able_bcs)
+        a_able_bc_pos_list = get_able_bc_pos_list(a_pos)
+        a_bcs_len = len(a_able_bc_pos_list)
+        b_able_bc_pos_list = get_able_bc_pos_list(b_pos)
+        b_bcs_len = len(b_able_bc_pos_list)
 
-        a_able_bc = a_able_bcs[0] if a_able_bcs else (-1, -1)
-        b_able_bc = b_able_bcs[0] if b_able_bcs else (-2, -2)
+        a_able_bc_pos = a_able_bc_pos_list[0] if a_able_bc_pos_list else (-1, -1)
+        b_able_bc_pos = b_able_bc_pos_list[0] if b_able_bc_pos_list else (-2, -2)
 
-        if a_able_bc == b_able_bc:
+        if a_able_bc_pos == b_able_bc_pos:
             if a_bcs_len == b_bcs_len == 2:
-                if a_able_bcs[1] > b_able_bcs[1]:
-                    a_able_bc = a_able_bcs[1]
+                if bc_dict[a_able_bc_pos_list[1]]['p'] > bc_dict[b_able_bc_pos_list[1]]['p']:
+                    a_able_bc_pos = a_able_bc_pos_list[1]
                 else:
-                    b_able_bc = b_able_bcs[1]
+                    b_able_bc_pos = b_able_bc_pos_list[1]
             elif a_bcs_len == 2:
-                a_able_bc = a_able_bcs[1]
+                a_able_bc_pos = a_able_bc_pos_list[1]
             elif b_bcs_len == 2:
-                b_able_bc = b_able_bcs[1]
+                b_able_bc_pos = b_able_bc_pos_list[1]
 
-        if a_able_bc == b_able_bc:
-            bc = bc_dict[a_able_bc]
+        if a_able_bc_pos == b_able_bc_pos:
+            bc = bc_dict[a_able_bc_pos]
             a_power = b_power = bc['p'] // 2
         else:
-            a_bc = bc_dict.get(a_able_bc, {'p': 0})
-            b_bc = bc_dict.get(b_able_bc, {'p': 0})
+            a_bc = bc_dict.get(a_able_bc_pos, {'p': 0})
+            b_bc = bc_dict.get(b_able_bc_pos, {'p': 0})
             a_power, b_power = a_bc['p'], b_bc['p']
         a_power_list.append(a_power)
         b_power_list.append(b_power)
