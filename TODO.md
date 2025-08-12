@@ -35,4 +35,5 @@
 [1300 스택](stack/1300/)
 
 ## SWEA
-[SWEA 2115](swea/2115/README.md)
+[SWEA 2115 벌꿀채취](swea/2115/README.md)
+[SWEA 5650 핀볼 게임](swea/5650/README.md)
