@@ -1,41 +1,75 @@
-# 미완성 코드
+import sys
+
+sys.stdin = open('sample_input.txt', 'r')
+
+# 테케 50개
+# N x N (4 <= N <= 10)
+# 사람 수 1명 ~ 10명
+# 계단 입구 반드시 2개
+# 계단 길이 2 ~ 10
+# 사람 위치, 계단 입구 위치 겹치지 X
+#
+# ### 입력
+# N
+# N x N 2차원 배열
+#
+#
 
 T = int(input())
 
 for t in range(T):
     N = int(input())
+    board = [list(map(int, input().split())) for _ in range(N)]
 
-    ppos_list = []
-    spos_list = [] # [(계단1 x좌표, 계단1 y좌표), (계단2 x좌표, 계단2 y좌표)]
-
+    pos_list = []
+    stairs_list = []
+    stairs_time_list = []
     for i in range(N):
-        row = list(map(int, input().split()))
-        
-        for j, cell in enumerate(row):
-            if cell == 1:
-                ppos_list.append((i, j))
-            if cell >= 2:
-                spos_list.append((i, j))
-    # 입력된 리스트 튜플로 고정
-    ppos_list = tuple(ppos_list) 
-    spos_list = tuple(spos_list)
+        for j in range(N):
+            if board[i][j] == 1:
+                pos_list.append((i, j))
+            elif board[i][j] > 1:
+                stairs_list.append((i, j))
+                stairs_time_list.append(board[i][j])
 
-    done = [False] * len(ppos_list)
+    stair1_targets = []
+    stair2_targets = []
 
-    def compare(ppos_sidx):
-        ppos, sidx = ppos_sidx
-        s = spos_list[sidx]
-        return abs(ppos[0] - s[0]) + abs(ppos[1] - s[1])
+    def get_spend_time(stair_pos, targets, stair_time):
+        if not targets:
+            return 0
+        dist_list = sorted(
+            map(
+                lambda pos:
+                abs(stair_pos[0] - pos[0]) +
+                abs(stair_pos[1] - pos[1]),
+                targets
+            )
+        )
+        spend_time = max(dist_list[:3]) + stair_time
+        for i in range(3, len(dist_list)):
+            spend_time = max(dist_list[i - 3] + stair_time, dist_list[i]) + stair_time
+        return spend_time
 
-    def brute_force(ppos_sidx_list):
-        step = len(ppos_sidx_list)
+    min_spend_time = float('inf')
 
-        if len(ppos_list) == step:
-            sorted(ppos_sidx_list, key=compare)
+    def dfs(step):
+        global min_spend_time
+        if step == len(pos_list):
+            stair1_pos, stair2_pos = stairs_list
+            stair1_time, stair2_time = stairs_time_list
+
+            spend_time1 = get_spend_time(stair1_pos, stair1_targets, stair1_time)
+            spend_time2 = get_spend_time(stair2_pos, stair2_targets, stair2_time)
+            min_spend_time = min(min_spend_time, max(spend_time1, spend_time2))
             return
 
-        brute_force(ppos_sidx_list + [(ppos_list[step], 0)])
-        brute_force(ppos_sidx_list + [(ppos_list[step], 1)])
+        stair1_targets.append(pos_list[step])
+        dfs(step+1)
+        stair1_targets.pop()
+        stair2_targets.append(pos_list[step])
+        dfs(step+1)
+        stair2_targets.pop()
 
-    brute_force([(ppos_list[0], 0)])
-    brute_force([(ppos_list[0], 1)])
+    dfs(0)
+    print(f"#{t+1}", min_spend_time+1)
