@@ -34,6 +34,9 @@
 ## 스택
 [1300 스택](stack/1300/)
 
+## 유니온 파인드
+[17472 다리 만들기 2](union_find/17472/README.md)
+
 ## SWEA
 [SWEA 2115 벌꿀채취](swea/2115/README.md)
 [SWEA 5650 핀볼 게임](swea/5650/README.md)
