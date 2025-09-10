@@ -1,35 +1,26 @@
-## 입력
-# N (1 <= N <= 100,000, 10만)
-# k 번쨰 (1 <= k <= 1,000,000,000, 10억)
-#
-# N^2 = 100억, log N = 20
-# log K = 30
-#
-# N x N 배열 A
-# N = 3 일 때
-# 배열은 가상, 최대 100억번이라 생성될 수가 없음
-# [1, 2, 3] ... 최대 10만
-# [2, 4, 6]
-# [3, 6, 9]
-# .
-# .
-# .
-# 최대 10만
-# [0  1  2  3  4  5  6  7  8]
-# [1, 2, 2, 3, 3, 4, 6, 6, 9]
-#
-# N = **4** 일 때
-# [1, 2, 3, 4]
-# [2, 4, 6, 8]
-# [3, 6, 9, 12]
-# [4, 8, 12, 16]
-#
-# [0  1  2  3  4  5  6  7  8  9 10 11 12  13  14  15]
-# [1, 2, 2, 3, 3, 4, 4, 4, 6, 6, 8, 8, 9, 12, 12, 16]
-# 
-# 
+N = int(input())
+K = int(input())
 
 
-## 출력
-#
-# 배열 B의 k
+def get_lte_num(cmp):
+    num = 0
+    for i in range(1, N+1):
+        num += min(cmp // i, N)
+    return num
+
+start = 1
+end = N ** 2 + 1
+min_num = float('inf')
+while start < end:
+    # print(start, end)
+    mid = (start + end) // 2
+    lte_num = get_lte_num(mid)
+    if lte_num >= K:
+        end = mid
+        min_num = min(min_num, end)
+    elif lte_num < K:
+        start = mid + 1
+    # else:
+    #     min_num = min(min_num, end)
+
+print(min_num)
